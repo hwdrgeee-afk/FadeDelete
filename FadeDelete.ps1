@@ -4,7 +4,7 @@ Clear-Host
 # =====================
 # CONFIG KEY
 # =====================
-$VALID_KEY = "FADE-2026"
+$VALID_KEY = "2026Dll"
 
 $key = Read-Host "Enter Key"
 if ($key -ne $VALID_KEY){
