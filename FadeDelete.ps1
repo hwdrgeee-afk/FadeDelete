@@ -1,6 +1,36 @@
 [Console]::OutputEncoding=[Text.Encoding]::UTF8
 Clear-Host
 
+# =====================
+# CONFIG KEY
+# =====================
+$VALID_KEY = "FADE-2026"
+
+$key = Read-Host "Enter Key"
+if ($key -ne $VALID_KEY){
+    Write-Host "INVALID KEY!" -ForegroundColor Red
+    Start-Sleep 2
+    exit
+}
+
+# =====================
+# RAINBOW TEXT FUNCTION
+# =====================
+function Write-Rainbow($text){
+    $colors = @(
+        "Red","Yellow","Green","Cyan","Blue","Magenta"
+    )
+    $i = 0
+    foreach ($char in $text.ToCharArray()){
+        Write-Host -NoNewline $char -ForegroundColor $colors[$i % $colors.Count]
+        $i++
+    }
+    Write-Host ""
+}
+
+# =====================
+# STEP SYSTEM
+# =====================
 $global:step = 0
 $total = 16
 
@@ -9,7 +39,7 @@ function Run-Step($name,$script){
     $global:step++
 
     Write-Host ""
-    Write-Host ("[{0:00}/{1}] {2}" -f $step,$total,$name) -ForegroundColor Cyan
+    Write-Rainbow ("[{0:00}/{1}] {2}" -f $step,$total,$name)
 
     try{
         & $script
@@ -20,9 +50,15 @@ function Run-Step($name,$script){
     }
 }
 
-Write-Host "=== Fade ===" -ForegroundColor Yellow
+# =====================
+# TITLE
+# =====================
+Write-Rainbow "=== Fade OS ULTRA ==="
 Start-Sleep 1
 
+# =====================
+# TASKS
+# =====================
 Run-Step "Temp files" {
     Remove-Item "$env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
     Remove-Item "C:\Windows\Temp\*" -Recurse -Force -ErrorAction SilentlyContinue
@@ -100,5 +136,6 @@ Run-Step "Finalize" {
 
 Write-Host ""
 Write-Host "======================================"
+Write-Rainbow "Completed!"
 Write-Host "Steps: $step / $total completed"
 Write-Host "Restart recommended." -ForegroundColor Yellow
